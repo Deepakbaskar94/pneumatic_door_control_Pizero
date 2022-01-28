@@ -1,20 +1,49 @@
-<!DOCTYPE html> 
-  <head> 
-     <title>GPIO Control</title> 
-     <link rel="stylesheet" href='../static/master.css'/> 
-  </head> 
-  <body> 
-		<h1>RPi GPIO Control</h1> 
-		<br> 
-		<h2> Door Status </h2> 
-		<h3> RED LED ==>  {{ ledRed  }}  ==>   
-				<!--a href="/ledRed/off"class="button">Door Close</a--> 
-				<a href="/ledRed/on" class="button">Door Open</a>  
-		</h3> 
-		<h3> YLW LED ==>  {{ ledYlw  }}  ==>   
-				<!--a href="/ledYlw/off"class="button">Door Close</a--> 
-				<a href="/ledYlw/on" class="button">Door Close</a>  
-		</h3> 
-		
-  </body> 
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='master.css') }}">
+        <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"/>
+    </head>
+    <body>
+        <section class="flex-fill gradient-custom">
+            <div class="container py-5 h-100">
+              <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+                  <div class="card bg-light text-black" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+          
+                      <div class="mb-md-5 mt-md-4 pb-2">
+          
+                        <h2 class="fw-bold mb-2 text-uppercase text-dark-50">PNEUMATIC DOOR</h2>
+                        <p class="text-black-50 mb-5">ProbePlus Innovative Solutions</p>
+                            <div class="row justify-content-center ">
+                            <a href="/dooropen/on">
+                            <button class="btn btn-outline-success btn-lg px-5  my-3" type="submit">Open</button>
+                            </a>
+                            </div>
+                            <div class ="row justify-content-center ">
+                            <a href="/doorclose/on">
+                            <button class="btn btn-outline-danger btn-lg px-5" type="submit">Close</button>
+                            </a>
+                            </div>
+                            <div class = "row justify-content-left mt-2">
+                              <div class = "col-6">
+                                <label for="" style= "float:left">Repeat</label>
+                                <input type="number" class="form-control input-lg border border-primary " >
+                              </div>
+                              <div class = "col-6">
+                              <button class="btn btn-info rst-btn btn-md mr-sm-3 mt-4 ml-8 px-4 " type="submit">Start</button>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                        
+                    </div>
+                  </div>
+                </div>
+                
+
+              </div>
+            </div>
+          </section>
+    </body>
 </html>

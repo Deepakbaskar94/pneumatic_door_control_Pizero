@@ -33,7 +33,7 @@ def index():
       'ledRed'  : ledRedSts,
       'ledYlw'  : ledYlwSts,
       }
-	return render_template('index.html', **templateData)
+	return render_template('index2.html', **templateData)
 	
 # The function below is executed when someone requests a URL with the actuator name and action in it:
 @app.route("/<deviceName>/<action>")
@@ -55,7 +55,7 @@ def action(deviceName, action):
 	  'ledRed'  : ledRedSts,
           'ledYlw'  : ledYlwSts,
       	}
-	return render_template('index.html', **templateData)
+	return render_template('index2.html', **templateData)
 
 if __name__ == "__main__":
    #port = 5000 + random.randint(0, 999)
