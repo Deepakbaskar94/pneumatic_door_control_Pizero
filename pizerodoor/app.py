@@ -25,37 +25,45 @@ GPIO.output(ledYlw, GPIO.LOW)
 	
 @app.route("/")
 def index():
-	# Read GPIO Status
-	ledRedSts = GPIO.input(ledRed)
-	ledYlwSts = GPIO.input(ledYlw)
-	
-	templateData = {
-      'ledRed'  : ledRedSts,
-      'ledYlw'  : ledYlwSts,
-      }
-	return render_template('index2.html', **templateData)
-	
-# The function below is executed when someone requests a URL with the actuator name and action in it:
-@app.route("/<deviceName>/<action>")
-def action(deviceName, action):
-	if deviceName == 'dooropen':
-		actuator = ledRed
-	if deviceName == 'doorclose':
-		actuator = ledYlw
-	  
-	if action == "on":
-        	GPIO.output(actuator, GPIO.HIGH)
-        	time.sleep(2)
-        	GPIO.output(actuator, GPIO.LOW)
-		     
-	ledRedSts = GPIO.input(ledRed)
-	ledYlwSts = GPIO.input(ledYlw)
-	   
-	templateData = {
-	  'ledRed'  : ledRedSts,
-          'ledYlw'  : ledYlwSts,
-      	}
-	return render_template('index2.html', **templateData)
+    status = "Unknown"
+    return render_template('index2.html', cs = status)
+
+@app.route("/dooropen/on")
+def dooropen():
+    GPIO.output(ledRed, GPIO.HIGH)
+    time.sleep(2)
+    GPIO.output(ledRed, GPIO.LOW)
+
+    status = "Door Open"
+    return render_template('index2.html', cs = status)
+
+
+@app.route("/doorclose/on")
+def doorclose():
+    GPIO.output(ledYlw, GPIO.HIGH)
+    time.sleep(2)
+    GPIO.output(ledYlw, GPIO.LOW)
+
+    status = "Door Close"
+    return render_template('index2.html', cs = status)
+
+
+@app.route("/repeat", methods = ['POST', 'GET'])
+def repeat():
+    num = request.form['num']
+    num = int(num)
+    for x in range(num):
+        GPIO.output(ledRed, GPIO.HIGH)
+        time.sleep(1)
+        GPIO.output(ledRed, GPIO.LOW)
+        time.sleep(1)
+        GPIO.output(ledYlw, GPIO.HIGH)
+        time.sleep(1)
+        GPIO.output(ledYlw, GPIO.LOW)
+        time.sleep(1)
+    
+    status = "completed"
+    return render_template('index2.html', cs = status)
 
 if __name__ == "__main__":
    #port = 5000 + random.randint(0, 999)
