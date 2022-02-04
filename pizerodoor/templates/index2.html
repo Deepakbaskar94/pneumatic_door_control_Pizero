@@ -24,15 +24,22 @@
                             <a href="/doorclose/on">
                             <button class="btn btn-outline-danger btn-lg px-5" type="submit">Close</button>
                             </a>
-                            </div>
-                            <div class = "row justify-content-left mt-2">
+			    </div>
+			    <form action = "{{ url_for('repeat') }}"  method = "POST">
+				<div class = "row justify-content-left mt-2">
                               <div class = "col-6">
-                                <label for="" style= "float:left">Repeat</label>
-                                <input type="number" class="form-control input-lg border border-primary " >
+                                <label style="float:left">Repeat</label>
+                                <input type="text" pattern="\d*" maxlength="3" class="form-control input-lg border border-primary" Name='num1'>
                               </div>
                               <div class = "col-6">
-                              <button class="btn btn-info rst-btn btn-md mr-sm-3 mt-4 ml-8 px-4 " type="submit">Start</button>
+                              <input class="btn btn-info rst-btn btn-md mr-sm-3 mt-4 ml-8 px-4 " type="submit" value="submit">
                               </div>
+				</form>
+
+			         <!--form method='get' action=\"/repeat\">
+   <label>Repeat:</label>
+   <input name=\'repeat' length=5>
+   <input type='submit' value='Start'></form-->
                             </div>
                           </div>
                       </div>
