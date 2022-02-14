@@ -68,6 +68,11 @@ def repeat():
     else:
         status = "not completed"
         render_template('index2.html', cs = status)
+	
+@app.route("/find")
+def test():
+    result = "door"
+    return result
 
 if __name__ == "__main__":
    #port = 5000 + random.randint(0, 999)
