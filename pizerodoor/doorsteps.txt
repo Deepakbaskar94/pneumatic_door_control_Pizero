@@ -1,0 +1,230 @@
+OS INSTALLATION
+
+	1. install raspberry pi imager and open the raspberry pi.
+
+	2.click operating system
+
+	3.click raspberry pi os (other)
+
+	4.select raspberry pi os full(32-bit)
+
+	5.click storage option
+
+	6.select the USB device
+
+	7. click WRITE option
+		warning message will show (all existing data on 'mass storage device USB device' will be erased
+		Are you sure you want to continue?)
+
+	8.select YES option
+		It will writing... (and) It will verifing...
+
+	9.click CONTINUE
+======================================================================================================================================
+
+CREATE SSH FILE
+
+	1.connect the device on system
+
+	2.open the file manager
+
+	3.find the device (boot)
+
+	4.create a ("ssh") text file without extension
+
+=======================================================================================================================================
+
+ETHERNET CONNENTION
+
+	1. connect the raspberry pi to router using ethernet
+	
+    2. connect the pc same router using ethernet
+	
+	3. go to terminal give the command windows
+
+		#ipconfig
+
+			(Ethernet adapter Ethernet:
+
+			Connection-specific DNS Suffix  . :
+			Link-local IPv6 Address . . . . . : fe80::94f7:f067:cf48:3c4d%19
+			IPv4 Address. . . . . . . . . . . : 192.168.1.2
+			Subnet Mask . . . . . . . . . . . : 255.255.255.0
+			Default Gateway . . . . . . . . . : 192.168.1.1
+
+			Wireless LAN adapter Wi-Fi:)
+			
+========================================================================================================================================
+
+SCAN IPADDRESS
+
+	1. Install advanced ip scanner
+
+	2. Give example ipaddress 192.168.1.2-10
+
+	3. click scan 
+
+	4. Results will come
+
+		It will show raspberry pi ip address 
+		ip address :192.168.1.4
+		
+========================================================================================================================================
+
+CREATE HOTSPOT IN RASPBERRY PI OS
+
+	1. open terminal give the command 
+		 #ssh pi@192.168.1.4
+
+	2. give the password
+		 password:raspberry
+
+	3. Install hostapd
+		 #sudo apt install hostapd
+		 #sudo systemctl unmask hostapd
+
+	5. Enable hostapd
+		 #sudo systemctl enable hostapd
+
+	6. Install dnsmasq
+		 #sudo apt install dnsmasq
+
+	7. #sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables-persistent
+
+	8. #sudo nano /etc/dhcpcd.conf
+		 (add in the end)
+		 interface wlan0
+		 static ip_address=192.168.5.1/24
+		 nohook wpa_supplicant
+
+	9. #sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
+
+	10. #sudo nano /etc/dnsmasq.conf
+
+		 interface=wlan0 # Listening interface
+		 dhcp-range=192.168.5.2,192.168.5.20,255.255.255.0,24h
+                # Pool of IP addresses served via DHCP
+		 domain=wlan     # Local wireless DNS domain
+		 address=/gw.wlan/192.168.5.1
+                # Alias for this router
+
+	11. #sudo rfkill unblock wlan
+
+	12. #sudo nano /etc/hostapd/hostapd.conf
+
+		 country_code=IN
+		 interface=wlan0
+		 ssid=pi0door
+		 hw_mode=g
+		 channel=7
+		 macaddr_acl=0
+		 auth_algs=1
+		 ignore_broadcast_ssid=0
+		 wpa=2
+		 wpa_passphrase=12345678
+		 wpa_key_mgmt=WPA-PSK
+		 wpa_pairwise=TKIP
+		 rsn_pairwise=CCMP
+
+	13. #sudo systemctl reboot
+		 (Connection to 192.168.1.3 closed by remote host.
+		  Connection to 192.168.1.3 closed.)
+			once rebooted connect to the created wifi 
+
+	14. ssh pi@192.168.5.1 and give the password
+	
+===============================================================================================================================================
+
+	1. connect the raspberry pi 
+		#ssh pi@192.168.5.1 
+		(or) 
+		If getting error use this command
+		#ssh-keygen -R 192.168.5.1
+		
+	2. give password
+	
+	3. give # cd command
+	
+	4. Then give #cd Desktop/
+	
+	5. Install git
+		#sudo apt install git
+	
+	6. give clone command
+	
+		#git clone https://github.com/Deepakbaskar94/pneumatic_door_control_Pizero
+	
+	7. give #ls command
+	
+		ex: (pi@raspberrypi:~/Desktop $ ls
+		 pneumatic_door_control_Pizero
+		 pi@raspberrypi:~/Desktop $)
+	
+	8. give #cd filename command and give #ls command
+	
+		ex: (pi@raspberrypi:~/Desktop $ cd pneumatic_door_control_Pizero/
+		 pi@raspberrypi:~/Desktop/pneumatic_door_control_Pizero $ ls
+		 LICENSE  pizerodoor  README.md  steps.txt
+		 pi@raspberrypi:~/Desktop/pneumatic_door_control_Pizero $)
+	
+	9. give #cd filename command and give #is command
+	
+		ex: (pi@raspberrypi:~/Desktop/pneumatic_door_control_Pizero $ cd  pizerodoor/
+		 pi@raspberrypi:~/Desktop/pneumatic_door_control_Pizero/pizerodoor $ )
+		 
+	10. give #pwd command 
+	
+		ex: (pi@raspberrypi:~/Desktop/pneumatic_door_control_Pizero/pizerodoor $ pwd
+		 /home/pi/Desktop/pneumatic_door_control_Pizero/pizerodoor
+		 pi@raspberrypi:~/Desktop/pneumatic_door_control_Pizero/pizerodoor $)
+		 
+	11. copy the link
+	
+			ex: (/home/pi/Desktop/pneumatic_door_control_Pizero/pizerodoor)
+
+================================================================================================================================================
+
+CREATE SERVICE
+	
+	1.create a service
+		#sudo vi /lib/systemd/system/doorstart.service
+		
+	2. write the below code inside it edit the python interpreter path and python file path
+
+			[Unit]
+			Description=door service
+			After=multi-user.target
+			Conflicts=getty@tty1.service
+
+			[Service]
+			Type=simple
+			ExecStart=/usr/bin/python /home/pi/Desktop/pneumatic_door_control_Pizero/pizerodoor/app.py
+			StandardInput=tty-force
+
+			[Install]
+			WantedBy=multi-user.target
+			
+	5. Reload everytime while we edit the above file
+
+		#sudo systemctl daemon-reload
+	
+	6. Enable command and start command for the service
+
+		#sudo systemctl enable doorstart.service
+		#sudo systemctl start doorstart.service
+	
+	7. Check status of the service by below command
+
+		#sudo systemctl status doorstart.service
+	 
+			  (	● doorstart.service - door service
+     Loaded: loaded (/lib/systemd/system/doorstart.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2022-02-09 06:33:56 GMT; 11s ago
+   Main PID: 2574 (python)
+      Tasks: 1 (limit: 415)
+        CPU: 3.814s
+     CGroup: /system.slice/doorstart.service
+             └─2574 /usr/bin/python /home/pi/Desktop/pneumatic_door_control_Pizero/pizerodoor/app.py )
+
+	8. go to chrome give ipaddress 192.168.5.1:3000
+			link: http://192.168.5.1:3000/
